@@ -11,6 +11,7 @@ clients = []
 
 @app.route("/")
 def hello_world():
+    print(clients)
     return jsonify({"msg": len(clients)})
 
 
