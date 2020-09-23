@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
 import json
 
@@ -6,16 +6,30 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 
+clients = []
+
+
 @app.route("/")
-def index():
-    return "hw"
+def hello_world():
+    return jsonify({"msg": len(clients)})
 
 
-@socketio.on('send_message')
-def handle_source(json_data):
-    text = json_data['message'].encode('ascii', 'ignore')
-    print('hello')
-    socketio.emit('echo', {'echo': 'Server Says: '+text})
+@app.route("/test-broadcast")
+def test_broadcast():
+    socketio.emit("test_broadcast", room=clients[0])
+    return "Did it work?"
+
+
+@socketio.on("connect")
+def test_connect():
+    clients.append(request.sid)
+    print("Client connected")
+
+
+@socketio.on("disconnect")
+def test_disconnect():
+    clients.remove(request.sid)
+    print("Client disconnected")
 
 
 if __name__ == "__main__":
