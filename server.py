@@ -1,18 +1,32 @@
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO
 import json
+import pymongo
+import ssl
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
+db_string = "mongodb+srv://dtabarini:8tbFDUeD75u&e@test-cluster.yq5xx.mongodb.net/?retryWrites=true&w=majority"
+
+client = pymongo.MongoClient(db_string, ssl=True, ssl_cert_reqs=ssl.CERT_NONE)
+db = client.test
+
+
+mydb = client["data"]
+mycol = mydb["test"]
 
 clients = []
 
 
 @app.route("/")
 def hello_world():
-    print(clients)
-    return jsonify({"msg": len(clients)})
+
+    x = mycol.insert_one({
+        'ah': 'choo'
+    })
+    print(x)
+    return "workded"
 
 
 @app.route("/test-broadcast")
