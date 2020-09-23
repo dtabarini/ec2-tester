@@ -16,6 +16,7 @@ def hello_world():
 
 @app.route("/test-broadcast")
 def test_broadcast():
+    print("hello there")
     socketio.emit("test_broadcast", room=clients[0])
     return "Did it work?"
 
