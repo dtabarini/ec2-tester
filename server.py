@@ -21,11 +21,10 @@ clients = []
 
 @app.route("/")
 def hello_world():
-
-    x = mycol.insert_one({
+    """ x = mycol.insert_one({
         'ah': 'choo'
-    })
-    print(x)
+    }) """
+    # print(x)
     return "workded"
 
 
@@ -36,15 +35,32 @@ def test_broadcast():
     return "Did it work?"
 
 
+@app.route("/ttc")
+def woah():
+    print("hello there", clients)
+    x = mycol.find_one()
+    print(x)
+    print(x['requests'])
+    socketio.emit("test_broadcast", room=x['requests'])
+
+    return "Did it work?"
+
+
 @socketio.on("connect")
 def test_connect():
-    clients.append(request.sid)
+
+    x = mycol.insert_one({
+        'requests': request.sid
+    })
+    print(x)
     print("Client connected")
 
 
 @socketio.on("disconnect")
 def test_disconnect():
-    clients.remove(request.sid)
+
+    x = mycol.drop()
+    print(x)
     print("Client disconnected")
 
 
