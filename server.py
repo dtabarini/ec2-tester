@@ -19,13 +19,25 @@ mycol = mydb["test"]
 clients = []
 
 
+class Count:
+    def __init__(self):
+        self.count = 0
+
+    def update(self):
+        self.count += 1
+
+
+c = Count()
+
+
 @app.route("/")
 def hello_world():
     """ x = mycol.insert_one({
         'ah': 'choo'
     }) """
     # print(x)
-    return "workded"
+    c.update()
+    return "count is " + str(c.count)
 
 
 @app.route("/test-broadcast")
@@ -41,8 +53,8 @@ def woah():
     x = mycol.find_one()
     print(x)
     print(x['requests'])
-    socketio.emit("test_broadcast", room=x['requests'])
-
+    res = socketio.emit("test_broadcast", room=x['requests'])
+    print('res is ', res)
     return "Did it work?"
 
 
