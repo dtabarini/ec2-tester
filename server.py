@@ -35,8 +35,9 @@ def hello_world():
     """ x = mycol.insert_one({
         'ah': 'choo'
     }) """
-    # print(x)
+
     c.update()
+    print(c.count)
     return "count is " + str(c.count)
 
 
